@@ -40,6 +40,27 @@ Run the executable to get your coordinates
     $ geoclue
     42.12345,-83.12345
 
+Use the `--help` flag for more details
+
+    $ geoclue --help
+    Usage: geoclue [option flags]
+      Running with no options will print comma-separated coordinates.
+
+      -h --help              print this message
+
+    INFORMATION OPTIONS
+      -f --full              fetch all location information
+      -a --address           fetch address information (requires fetching coordinates)
+      -c --coordinates       fetch your coordinates from GeoClue
+
+    CONFIGURATION OPTIONS
+      -t --timeout [int]     set the timeout for each operation
+      -n --no-cache          don't use the cache
+      -d --print-config      print out all configuration
+         --format [fmt]      output format of data in named printf format
+                             named options include "tab" and "pipe"
+                             default is "%<key>s: %<val>s\n"
+
 ## Development
 
 I recommend having a D-Bus debugger tool like [d-feet](https://wiki.gnome.org/Apps/DFeet) in order to inspect the service API. This tool relies entirely on the `org.freedesktop.GeoClue2` system service.
