@@ -1,0 +1,80 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "geoclue"
+
+if (ARGV & %w[-h --help]).any?
+  puts "Usage:"
+  puts "  geoclue [option flags]"
+  puts ""
+  puts "  Running with no options will print comma-separated coordinates."
+  puts ""
+  puts "  -h --help\t\t print this message"
+  puts ""
+  puts "INFORMATION OPTIONS"
+  puts "  -f --full\t\t fetch all location information"
+  puts "  -a --address\t\t fetch address information (requires fetching coordinates)"
+  puts "  -c --coordinates\t fetch your coordinates from GeoClue"
+  puts ""
+  puts "CONFIGURATION OPTIONS"
+  puts "  -t --timeout [int]\t set the timeout for each operation"
+  puts "  -n --no-cache\t\t don't use the cache"
+  puts "  -d --print-config\t print out all configuration"
+  puts "     --format [fmt]\t output format of data in named printf format"
+  puts "                   \t named options include \"tab\" and \"pipe\""
+  puts "                   \t default is \"%<key>s: %<val>s\\n\""
+  exit 0
+end
+
+def has_arg(*names)
+  (ARGV & names).any?
+end
+
+def fetch_arg(*names, default)
+  names.each do |name|
+    index = ARGV.index(name)
+    next unless index
+    return ARGV[index + 1] || default
+  end
+  default
+end
+
+GeoClue.config do |c|
+  c.skip_cache = has_arg('-n', '--no-cache')
+  c.timeout = fetch_arg('-t', '--timeout', 10).to_i
+  c.format = fetch_arg('--format', "%<key>s: %<val>s\n")
+  c.format = case c.format
+             when "tab"
+               "%<key>s\t%<val>s\n"
+             when "pipe"
+               "%<key>s|%<val>s\n"
+             else
+               c.format
+             end
+
+end
+
+if has_arg('-d', '--print-config')
+  puts GeoClue.config.inspect
+  puts ""
+end
+
+print_pair = -> (key, val) {
+  printf GeoClue.config.format, { key: key, val: val }
+}
+
+begin
+  if has_arg('-f', '--full')
+    GeoClue.full_location.each_pair(&print_pair)
+  elsif has_arg('-a', '--address')
+    GeoClue.address.each_pair(&print_pair)
+  elsif has_arg('-c', '--coordinates')
+    GeoClue.coordinates.each_pair(&print_pair)
+  else
+    data = GeoClue.coordinates
+    puts "#{data["latitude"]},#{data["longitude"]}"
+  end
+rescue => e
+  puts e.message
+  exit 1
+end
