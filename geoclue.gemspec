@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["github@shreve.io"]
 
   spec.summary       = %q{Access your computer's geographic coordinates}
-  spec.description   = %q{Use GeoClue to get geographic coordinates for your computer based soely on your WiFi connection}
+  spec.description   = %q{Use GeoClue to get geographic coordinates for your computer based soley on your WiFi connection}
   spec.homepage      = "https://github.com/shreve/geoclue-ruby"
   spec.license       = "MIT"
 
