@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    geoclue (0.1.0)
+    geoclue (0.1.1)
       ruby-dbus (~> 0.15.0)
 
 GEM
