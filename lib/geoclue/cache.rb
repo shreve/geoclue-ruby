@@ -47,7 +47,7 @@ module GeoClue
     end
 
     def recent?
-      (Time.now - File.mtime(filepath)) < 600
+      (Time.now - File.mtime(filepath)) < 900
     end
 
     def full?
