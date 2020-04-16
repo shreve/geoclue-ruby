@@ -50,7 +50,7 @@ module GeoClue
     def manager
       @manager ||= begin
                      object = service["/org/freedesktop/GeoClue2/Manager"]
-                     interface = object["org.freedesktop.GeoClue2.Manager"]
+                     object["org.freedesktop.GeoClue2.Manager"]
                      object
                    end
     end
@@ -66,7 +66,11 @@ module GeoClue
                     interface["DesktopId"] = "geoclue-ruby"
                     interface["RequestedAccuracyLevel"] = ['u', 8]
                     interface.on_signal("LocationUpdated") do
-                      handle_location_update(interface["Location"])
+                      begin
+                        handle_location_update(interface["Location"])
+                      rescue DBus::InvalidPacketException
+                        retry
+                      end
                     end
                     Thread.new { interface["Location"] }
                     object
@@ -75,7 +79,7 @@ module GeoClue
 
     def handle_location_update(location_id)
       location = service[location_id]
-      interface = location["org.freedesktop.GeoClue2.Location"]
+      location["org.freedesktop.GeoClue2.Location"]
       @data = location.GetAll("org.freedesktop.GeoClue2.Location").transform_keys(&:downcase)
     end
   end
