@@ -4,6 +4,8 @@ module GeoClue
   class Cache
     attr_accessor :data
 
+    EXPIRATION = 900
+
     def initialize
       @data = {}
       read if valid?
@@ -47,7 +49,7 @@ module GeoClue
     end
 
     def recent?
-      (Time.now - File.mtime(filepath)) < 900
+      (Time.now - File.mtime(filepath)) < EXPIRATION
     end
 
     def full?

@@ -7,7 +7,7 @@ class GeoClueTest < Minitest::Test
 
   def test_that_cache_knows_if_it_exists
     cache = GeoClue::Cache.new
-    File.unlink(cache.filepath) if File.exists?(cache.filepath)
+    File.unlink(cache.filepath) if File.exist?(cache.filepath)
     assert ! cache.exists?
     File.new(cache.filepath, 'w')
     assert cache.exists?
@@ -15,9 +15,9 @@ class GeoClueTest < Minitest::Test
 
   def test_that_cache_knows_if_it_is_recent
     cache = GeoClue::Cache.new
-    FileUtils.touch(cache.filepath, mtime: Time.now - 601)
+    FileUtils.touch(cache.filepath, mtime: Time.now - (GeoClue::Cache::EXPIRATION + 1))
     assert ! cache.recent?
-    FileUtils.touch(cache.filepath, mtime: Time.now - 599)
+    FileUtils.touch(cache.filepath, mtime: Time.now - (GeoClue::Cache::EXPIRATION - 1))
     assert cache.recent?
   end
 
