@@ -4,10 +4,24 @@ module GeoClue
   module ReverseGeocoder
     class << self
       def geocode(coords)
-        url =  "https://locationiq.com/v1/reverse_sandbox.php?format=json&lat=#{coords["latitude"]}&lon=#{coords["longitude"]}"
-        uri = URI(url)
-        result = Net::HTTP.get(uri)
-        JSON.parse(result)["address"]
+        url = URI::HTTPS.build(
+          scheme: "https",
+          host: "nominatim.openstreetmap.org",
+          path: "/reverse",
+          query: URI.encode_www_form(
+            format: 'json',
+            lat: coords['latitude'],
+            lon: coords['longitude']
+          )
+        )
+
+        result = JSON.parse(Net::HTTP.get(url))
+
+        if result.key?("address")
+          result["address"]
+        else
+          {}
+        end
       end
     end
   end
