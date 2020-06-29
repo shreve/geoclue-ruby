@@ -17,11 +17,11 @@ module GeoClue
 
         result = JSON.parse(Net::HTTP.get(url))
 
-        if result.key?("address")
-          result["address"]
-        else
-          {}
-        end
+        return {} if ! result.key?("address")
+
+        addr = result["address"]
+        addr["settlement"] = addr["city"] || addr["town"] || addr["village"]
+        addr
       end
     end
   end

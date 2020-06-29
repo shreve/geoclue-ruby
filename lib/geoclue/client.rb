@@ -3,7 +3,7 @@ require 'dbus'
 module GeoClue
   class Client
     COORD_KEYS = %w[latitude longitude accuracy].freeze
-    ADDR_KEYS = %w[house_number road city county state country postcode country_code].freeze
+    ADDR_KEYS = %w[house_number road settlement city town village county state country postcode country_code].freeze
 
     def initialize
       @data = {}
