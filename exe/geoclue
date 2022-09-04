@@ -59,7 +59,7 @@ if has_arg('-d', '--print-config')
   puts ""
 end
 
-print_pair = -> (key, val) {
+print_pair = -> ((key, val)) {
   printf GeoClue.config.format, { key: key, val: val }
 }
 
